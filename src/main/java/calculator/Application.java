@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class Application {
 
     private static final List<String> DELIMITERS = new ArrayList<>(
-            List.of(",")
+            List.of(",", ":")
     );
 
     public static void main(String[] args) {
