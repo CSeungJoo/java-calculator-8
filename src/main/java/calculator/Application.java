@@ -10,15 +10,18 @@ import java.util.stream.Collectors;
 
 public class Application {
 
-    private static final List<String> DELIMITERS = new ArrayList<>(
+    private static List<String> delimiters = new ArrayList<>(
             List.of(",", ":")
     );
 
     public static void main(String[] args) {
         System.out.println("덧셈할 문자열을 입력해 주세요.");
         String input = Console.readLine();
+        input = input.replace("\\n", "\n");
 
-        int calculatedNumber = calculateExpression(input);
+        String processedInput = processCustomDelimiter(input);
+
+        int calculatedNumber = calculateExpression(processedInput);
 
         System.out.println("결과 : " + calculatedNumber);
     }
@@ -28,7 +31,7 @@ public class Application {
             return 0;
         }
 
-        String regex = DELIMITERS.stream()
+        String regex = delimiters.stream()
                 .map(Pattern::quote)
                 .collect(Collectors.joining("|"));
 
@@ -37,5 +40,15 @@ public class Application {
                 .sum();
 
         return sum;
+    }
+
+    private static String processCustomDelimiter(String expression) {
+        if (expression.startsWith("//")) {
+            int newlineIndex = expression.indexOf("\n");
+            String customDelimiter = expression.substring(2, newlineIndex);
+            delimiters.add(customDelimiter);
+            return expression.substring(newlineIndex + 1);
+        }
+        return expression;
     }
 }
