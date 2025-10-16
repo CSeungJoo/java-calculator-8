@@ -35,20 +35,27 @@ public class Application {
                 .map(Pattern::quote)
                 .collect(Collectors.joining("|"));
 
-        int sum = Arrays.stream(expression.split(regex))
-                .mapToInt(Integer::parseInt)
-                .sum();
-
-        return sum;
+        try {
+            return Arrays.stream(expression.split(regex))
+                    .mapToInt(Integer::parseInt)
+                    .sum();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("잘못된 입력입니다.", e);
+        }
     }
+
 
     private static String processCustomDelimiter(String expression) {
         if (expression.startsWith("//")) {
             int newlineIndex = expression.indexOf("\n");
+            if (newlineIndex == -1) {
+                throw new IllegalArgumentException("커스텀 구분자 형식이 올바르지 않습니다.");
+            }
             String customDelimiter = expression.substring(2, newlineIndex);
             delimiters.add(customDelimiter);
             return expression.substring(newlineIndex + 1);
         }
         return expression;
     }
+
 }
