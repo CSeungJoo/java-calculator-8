@@ -1,22 +1,24 @@
 package calculator;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class Calculator {
     public CalculationResult calculate(String expression, Delimiter delimiter) {
         if (expression.isBlank()) {
-            return CalculationResult.of(0);
+            return CalculationResult.of(BigDecimal.ZERO);
         }
 
         String regex = delimiter.regex();
         String[] split = expression.split(regex);
         try {
-            int sum = Arrays.stream(split)
+            BigDecimal sum = Arrays.stream(split)
                     .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .mapToInt(Integer::parseInt)
+                    .filter(Predicate.not(String::isEmpty))
+                    .map(BigDecimal::new)
                     .peek(NumberValidator::validate)
-                    .sum();
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
             return CalculationResult.of(sum);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("잘못된 입력입니다.", e);

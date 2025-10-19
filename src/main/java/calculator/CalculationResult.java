@@ -1,13 +1,15 @@
 package calculator;
 
-public class CalculationResult {
-    private final int value;
+import java.math.BigDecimal;
 
-    private CalculationResult(int value) {
+public class CalculationResult {
+    private final BigDecimal value;
+
+    private CalculationResult(BigDecimal value) {
         this.value = value;
     }
 
-    public static CalculationResult of(int value) {
+    public static CalculationResult of(BigDecimal value) {
         return new CalculationResult(value);
     }
 
